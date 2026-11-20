@@ -1,26 +1,180 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Paper & ink */
+  --color-paper: #f8f5ef;
+  --color-paper-deep: #f0ebe1;
+  --color-paper-raised: #fdfcf9;
+  --color-ink: #191816;
+  --color-ink-soft: #55524b;
+  --color-ink-faint: #736f66;
+  --color-line: #ddd6c8;
+  --color-line-strong: #c4bcab;
+  /* One restrained accent: a burnt editorial red */
+  --color-accent: #a33a1f;
+  --color-accent-deep: #84301a;
+  --color-accent-wash: #f3e3da;
+  --color-danger: #a12a1c;
+  --color-success: #2f6b4a;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-rise: rise 0.9s var(--ease-editorial) both;
+  --animate-settle: settle 1.1s var(--ease-editorial) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(22px) rotate(var(--settle-from, 0deg));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(var(--settle-to, 0deg));
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* Display type: a text serif set tight, the way a masthead would be. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    font-optical-sizing: auto;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .shell {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .shell {
+      padding-inline: 3rem;
+    }
+  }
+
+  /* Underline that draws in on hover; used for inline text links. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 2px;
+    transition: background-size 0.35s var(--ease-editorial);
+  }
+  .link-underline:hover {
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+  }
+
+  .prose-legal h2 {
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    margin-top: 3rem;
+    margin-bottom: 0.875rem;
+  }
+  .prose-legal p,
+  .prose-legal li {
+    color: var(--color-ink-soft);
+    line-height: 1.75;
+  }
+  .prose-legal p + p {
+    margin-top: 1rem;
+  }
+  .prose-legal ul {
+    margin-top: 0.75rem;
+    padding-left: 1.125rem;
+    list-style: disc;
+  }
+  .prose-legal li + li {
+    margin-top: 0.375rem;
+  }
+  .prose-legal a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
