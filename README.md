@@ -65,6 +65,25 @@ consultation" button links to it. Until then those buttons open the enquiry
 form with "Video call" preselected. `NEXT_PUBLIC_*` values are read at build
 time, so rebuild after changing them.
 
+## Deploy on Vercel
+
+No `vercel.json` is needed — Vercel detects Next.js and pnpm from the repo.
+
+1. Import the GitHub repository at <https://vercel.com/new> and keep the
+   default build settings.
+2. Add the environment variables from `.env.example` under
+   Project → Settings → Environment Variables: `DATABASE_URL`,
+   `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `IP_HASH_SECRET`, and
+   `NEXT_PUBLIC_SITE_URL` once the domain is known.
+3. Use a hosted PostgreSQL with a pooled connection string (Neon, Supabase,
+   Vercel Postgres) and keep `DATABASE_POOL_MAX` low — each serverless
+   instance opens its own pool.
+4. Redeploy after changing any `NEXT_PUBLIC_*` value; they are read at build
+   time.
+
+The site builds and serves without any variables set; the enquiry form and
+`/admin` stay disabled until the database and admin variables are present.
+
 ## Structure
 
 ```
